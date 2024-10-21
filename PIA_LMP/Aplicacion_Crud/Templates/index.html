@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Libros</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        form {
+            display: inline;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+        <form action="/insert" method="POST">
+        <label for="Nombre">Nombre</label><br>
+        <input type="text" id="Nombre" name="Nombre" value="{{Libro[1] if Libro else ''}}">
+        
+        <label for="Autor">Autor</label><br>
+        <input type="text" id="Autor" name="Autor" value="{{Libro[2] if Libro else ''}}">
+
+        <label for="Edicion">Edicion</label><br>
+        <input type="text" id="Edicion" name="Edicion" value="{{Libro[4] if Libro else ''}}">
+
+        <label for="Fecha_Pub">Fecha de Publicacion</label><br>
+        <input type="text" id="Fecha_Pub" name="Fecha_Pub" value="{{Libro[5] if Libro else ''}}">
+
+        <label for="editorial">Editorial</label><br>
+        <input type="text" id="editorial" name="editorial" value="{{Libro[9] if Libro else ''}}">
+
+        <label for="Categoria">Categoria</label><br>
+        <input type="text" id="Categoria" name="Categoria" value="{{Libro[6] if Libro else ''}}">
+
+        <label for="Disponibilidad">Disponibilidad</label><br>
+        <input type="text" id="Disponibilidad" name="Disponibilidad" value="{{Libro[8] if Libro else ''}}">
+    </form>
+
+    <h2>Lista de Libros</h2>
+    <table>
+        <tr>
+            <th>Nombre</th>
+            <th>Autor</th>
+            <th>Edicion</th>
+            <th>Fecha de Pub.</th>
+            <th>Editorial</th>
+            <th>Categoria</th>
+            <th>Disponibilidad</th>
+        </tr>
+        {% for libro in Libros %}
+        <tr>
+            <td>{{ libro[1] }}</td>
+            <td>{{ libro[2] }}</td>
+            <td>{{ libro[4] }}</td>
+            <td>{{ libro[5] }}</td>
+            <td>{{ libro[9] }}</td>
+            <td>{{ libro[6] }}</td>
+            <td>{{ libro[8] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
