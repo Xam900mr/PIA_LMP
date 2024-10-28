@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Registro de Usuario</h1>
+ 
+    <form method="post" action="{{ url_for('register') }}">
+        <div>
+            <label for="Nombre">Nombre:</label>
+            {{ form.Usuario(size=32) }}
+            {% if form.Usuario.errors %}
+            <ul> 
+                {% for error in form.Usuario.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="Correo">Correo:</label>
+            {{ form.Correo(size=32) }}
+            {% if form.Correo.errors %}
+            <ul>
+                {% for error in form.Correo.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    
+        <div>
+            <label for="Contrasena">Contraseña:</label>
+            {{ form.Contrasena(size=32) }}
+            {% if form.Contrasena.errors %}
+        <ul>
+            {% for error in form.Contrasena.errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        </div>
+    
+        <div>
+            <label for="confirm">Repite Contraseña:</label>
+            {{ form.confirm(size=32) }}
+            {% if form.confirm.errors %}
+            <ul>
+                {% for error in form.confirm.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+    
+        <button type="submit">Registrarse</button>
+    </form>
+    
+</body>
+</html>

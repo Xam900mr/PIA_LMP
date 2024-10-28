@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Iniciar Sesión</h1>
+ 
+    <form method="post" action="{{ url_for('login') }}">
+        <div>
+            <label for="Correo">Correo:</label>
+            {{ form.Correo(size=32) }}
+            {% if form.Correo.errors %}
+            <ul>
+                {% for error in form.Correo.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            <label for="Contrasena">Contraseña:</label>
+            {{ form.Contrasena(size=32) }}
+            {% if form.Contrasena.errors %}
+            <ul>
+                {% for error in form.Contrasena.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        
+        <div>
+            {{ form.remember() }} Recordarme
+        </div>
+        
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+</body>
+</html>
