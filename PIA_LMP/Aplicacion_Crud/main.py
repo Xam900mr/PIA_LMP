@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import os
-from wtforms import Form, BooleanField, StringField, PasswordField, validators, ValidationError
+from wtforms import Form, BooleanField, StringField, PasswordField, validators
 
 db = mysql.connector.connect(
     user="root",
@@ -23,31 +23,45 @@ class LoginForm(Form):
     remember = BooleanField('Recordarme')
 
 
-cursor=db.cursor()
 
 app = Flask (__name__, template_folder='./Templates')
 app.secret_key = os.urandom(24)
 
 @app.route('/', methods=['GET'])
 def index():
+    
+    cursor=db.cursor()
     cursor.execute("select * from Libros")
     Libros = cursor.fetchall()
 
     return render_template('index.html', Libros=Libros)
 
 @app.route('/login', methods=['GET', 'POST'])
-def login():     
-    form = LoginForm(request.form)   
-    if request.method == 'POST' and form.validate():        
-        query = "SELECT ID, Contrasena FROM usuarios WHERE Correo = %s"        
-        cursor.execute(query, (form.Correo.data,))       
-        user = cursor.fetchone()               
-        if user and check_password_hash(user[1], form.Contrasena.data):                        
-            session['user_id'] = user[0]            
-            flash('Inicio de sesión exitoso') 
-            return redirect(url_for('dashboard')) 
-        else:
-            flash('Correo o contraseña incorrectos') 
+def login():
+    form = LoginForm(request.form)
+    if request.method == 'POST' and form.validate():
+        try:
+            cursor=db.cursor()
+            query = "SELECT ID, Contrasena FROM usuarios WHERE Correo = %s"
+            cursor.execute(query, (form.Correo.data,))
+            user = cursor.fetchone()
+            
+            # Asegúrate de consumir todos los resultados
+            cursor.fetchall()  # Limpia cualquier resultado pendiente
+            
+            if user and check_password_hash(user[1], form.Contrasena.data):
+                session['user_id'] = user[0]
+                flash('Inicio de sesión exitoso')
+                return redirect(url_for('index'))
+            else:
+                flash('Correo o contraseña incorrectos')
+                
+        except mysql.connector.Error as err:
+            flash('Error en la base de datos')
+            print(f"Error: {err}")
+            
+        finally:
+            cursor.close()  
     return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -59,7 +73,8 @@ def register():
         INSERT INTO usuarios (Nombre, Correo, Contrasena)         
         VALUES (%s, %s, %s)         
         """        
-        values = (form.Usuario.data, form.Correo.data, hashed_password)                
+        values = (form.Usuario.data, form.Correo.data, hashed_password)       
+        cursor=db.cursor()         
         cursor.execute(query, values)         
         db.commit()         
         flash('Gracias por registrarte') 
