@@ -8,6 +8,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Libros</title>
     <style>
+        .popup {             
+            display: none; 
+            position: fixed;             
+            top: 20px;             
+            right: 20px;      
+            transform: translate(-280%, -10%);       
+            background-color: #4CAF50; 
+            color: white;            
+            padding: 15px;             
+            border-radius: 5px;            
+            z-index: 1000; 
+            transition: opacity 0.5s ease;
+        }
         header {
             display: flex;
             justify-content: space-between;
@@ -21,6 +34,7 @@
             margin: 0;
         }
         .boton1 {
+            width: 150px;
             background-color: #D8FFDB;
             color: black;        
             padding: 10px 20px;
@@ -32,6 +46,43 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .boton1:hover {
+            background-color: #C7FFED;
+            color: black;
+            float: right;
+ 
+        }
+
+        .boton2 {
+            width: 150px;
+            background-color: rgb(89, 199, 89);
+            color: black;        
+            padding: 10px 20px;
+            border: 2px solid #C7FFED;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .boton2:hover {
+            background-color: #C7FFED;
+            color: black;
+            float: right;
+ 
+        }
+        .boton3 {
+            width: 170px;
+            background-color: #f44336;
+            color: black;        
+            padding: 10px 20px;
+            border: 2px solid #C7FFED;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .boton3:hover {
             background-color: #C7FFED;
             color: black;
             float: right;
@@ -83,8 +134,27 @@
 <body>
     <header>
         <h1>Libros Disponibles</h1>
-        <button  onclick="window.location.href='/login'"class="boton1">Ingresar</button>
-        <button  onclick="window.location.href='/register'"class="boton1">Registrate</button>
+        
+        {% if 'user_id' not in session %}
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button onclick="window.location.href='/login'" class="boton1">Ingresar</button>
+            <button onclick="window.location.href='/register'" class="boton1">Registrate</button>
+        </div>
+        {% else %}
+            <div>
+                Bienvenido {{user_id}}
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                {% if user_type == 'e' %}
+                    <button onclick="window.location.href='/agregar'" class="boton1">Agregar Libro</button>
+                {% else %}
+                    <button onclick="window.location.href='/add_book'" class="boton1">Mis Rentas</button>
+                {% endif %}
+                <button onclick="window.location.href='/logout'" class="boton1">Cerrar sesión</button>
+            </div>
+        {% endif %}
+
+
     </header>  
     <div class="book-container">
         {% for libro in Libros %}
@@ -98,8 +168,39 @@
             <p><strong>Cantidad:</strong> {{ libro[7] }}</p>
             <p><strong>Disponibilidad:</strong> {{ libro[8] }}</p>
             <p><strong>Editorial:</strong> {{ libro[9] }}</p>
+            {% if 'user_id' in session %}
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    {% if user_type == 'e' %}
+                        <button onclick="window.location.href='/logout'" class="boton2">Editar Libro</button>
+                        <button onclick="window.location.href='/logout'" class="boton3">Eliminar Libro</button>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
         {% endfor %}
-    </div>    
+    </div> 
+    
+    <div class="container">   
+        {% with messages = get_flashed_messages() %}        
+        {% if messages %}           
+            <div id="flash-message" class="popup">{{ messages[0] }}</div>       
+        {% endif %}    
+        {% endwith %} 
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {         
+            var flashMessage = document.getElementById('flash-message');         
+            if (flashMessage) {            
+                flashMessage.style.display = 'block';             
+                setTimeout(function() {                
+                    flashMessage.style.opacity = '0';                 
+                    setTimeout(function() {                     
+                        flashMessage.style.display = 'none'; 
+                    }, 500); 
+                }, 2000); 
+            } 
+        }); 
+    </script>
 </body>
 </html>

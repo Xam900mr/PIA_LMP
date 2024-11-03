@@ -1,23 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <style>
+         .popup {             
+            display: none; 
+            position: fixed;             
+            top: 20px;             
+            right: 20px;      
+            transform: translate(-190%, -10%);       
+            background-color: red; 
+            color: white;            
+            padding: 15px;             
+            border-radius: 5px;            
+            z-index: 1000; 
+            transition: opacity 0.5s ease;
+        }
+        .popup-close {
+            cursor: pointer;
+            color: red;
+            float: right;
+            font-weight: bold;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            box-sizing: border-box;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            display: block;
+            margin: 8px 0 4px;
+            color: #333;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 4px 0 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .error-list {
+            color: red;
+            font-size: 0.9em;
+            margin-top: -8px;
+            margin-bottom: 8px;
+        }
+        .remember {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+        }
+    </style>
 </head>
 <body>
-    <h1>Iniciar Sesión</h1>
- 
     <form method="post" action="{{ url_for('login') }}">
+        <h1>Iniciar Sesión</h1>
+
         <div>
             <label for="Correo">Correo:</label>
             {{ form.Correo(size=32) }}
             {% if form.Correo.errors %}
-            <ul>
-                {% for error in form.Correo.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
+                <ul class="error-list">
+                    {% for error in form.Correo.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </div>
         
@@ -25,19 +103,45 @@
             <label for="Contrasena">Contraseña:</label>
             {{ form.Contrasena(size=32) }}
             {% if form.Contrasena.errors %}
-            <ul>
-                {% for error in form.Contrasena.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
+                <ul class="error-list">
+                    {% for error in form.Contrasena.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
             {% endif %}
         </div>
         
-        <div>
-            {{ form.remember() }} Recordarme
+        <div class="remember">
+            {{ form.remember() }}
+            <label for="remember">Recordarme</label>
         </div>
         
         <button type="submit">Iniciar Sesión</button>
     </form>
+
+    <div class="container"> 
+        {% with messages = get_flashed_messages() %}        
+        {% if messages %}           
+            <div id="flash-message" class="popup">{{ messages[0] }}</div>       
+        {% endif %}    
+        {% endwith %} 
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {         
+            var flashMessage = document.getElementById('flash-message');         
+            if (flashMessage) {            
+                flashMessage.style.display = 'block';             
+                setTimeout(function() {                
+                    flashMessage.style.opacity = '0';                 
+                    setTimeout(function() {                     
+                        flashMessage.style.display = 'none'; 
+                    }, 500); 
+                }, 2000); 
+            } 
+        }); 
+    </script>
+
+
 </body>
 </html>
