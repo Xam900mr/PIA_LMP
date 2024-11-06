@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import os
 from wtforms import Form, BooleanField, StringField, PasswordField, validators, DateField, IntegerField
+from datetime import datetime, timedelta
 
 db = mysql.connector.connect(
     user="root",
@@ -45,24 +46,24 @@ def index():
     cursor.execute("select * from Libros")
     Libros = cursor.fetchall()
 
-    user_id = session.get('user_id')
     user_type = session.get('user_type')
 
-    return render_template('index.html', Libros=Libros, session=session, user_id=user_id, user_type=user_type)
+    return render_template('index.html', Libros=Libros, session=session, user_type=user_type)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         cursor = db.cursor()
-        query = "SELECT Nombre, Contrasena, tipo FROM usuarios WHERE Correo = %s"
+        query = "SELECT ID, Nombre, Contrasena, tipo FROM usuarios WHERE Correo = %s"
         cursor.execute(query, (form.Correo.data,))
         user = cursor.fetchone()
         cursor.close()
         
-        if user and check_password_hash(user[1], form.Contrasena.data):
+        if user and check_password_hash(user[2], form.Contrasena.data):
             session['user_id'] = user[0]
-            session['user_type'] = user[2]  
+            session['user_name']= user[1]
+            session['user_type'] = user[3]  
             flash('Inicio de sesión exitoso', 'success')  
             return redirect(url_for('index'))
         else:
@@ -89,7 +90,7 @@ def register():
     return render_template('register.html', form=form)
 
 @app.route('/agregar', methods=['GET', 'POST'])
-def add_book():     
+def agregar():     
     form = BookForm(request.form)    
     if request.method == 'POST' and form.validate():    
         query = """         
@@ -100,6 +101,8 @@ def add_book():
         cursor=db.cursor()
         cursor.execute(query, values)
         db.commit()
+        cursor.close
+
         flash('Libro agregado exitosamiente', 'success') 
         return redirect(url_for('index')) 
     return render_template('Agregar.html', form=form)
@@ -109,6 +112,136 @@ def logout():
     session.pop('user_id', None)  
     flash("Has cerrado sesión exitosamente")
     return redirect(url_for('index'))
+
+
+@app.route('/eliminar_libro/<int:libro_id>', methods=['POST'])
+def eliminar_libro(libro_id):
+   
+    query = "DELETE FROM libros WHERE ID = %s"
+
+    cursor = db.cursor()
+    cursor.execute(query, (libro_id,))
+    db.commit()
+    cursor.close()
+    
+    flash('Libro eliminado exitosamente', 'success')
+
+    return redirect(url_for('index'))
+
+
+
+@app.route('/editar_libro/<int:libro_id>', methods=['GET', 'POST'])
+def editar_libro(libro_id):
+    form = BookForm(request.form)
+    
+    if request.method == 'POST' and form.validate():
+        query = """
+            UPDATE libros
+            SET Nombre = %s, Autor = %s, ISBN = %s, Edicion = %s, Fecha_Pub = %s,
+                Categoria = %s, Cantidad = %s, Disponibilidad = %s, editorial = %s
+            WHERE ID = %s
+        """
+        values = (
+            form.Nombre.data, form.Autor.data, form.isbn.data, form.edicion.data,
+            form.fecha_pub.data, form.categoria.data, form.cantidad.data,
+            form.disponibilidad.data, form.editorial.data, libro_id
+        )
+        cursor = db.cursor()
+        cursor.execute(query, values)
+        db.commit()
+        cursor.close()
+        
+        flash('Libro actualizado exitosamente', 'success')
+        return redirect(url_for('index'))
+    
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM libros WHERE ID = %s", (libro_id,))
+    libro = cursor.fetchone()
+    cursor.close()
+    
+    if libro:
+        form.Nombre.data = libro['Nombre']
+        form.Autor.data = libro['Autor']
+        form.isbn.data = libro['ISBN']
+        form.edicion.data = libro['Edicion']
+        form.fecha_pub.data = libro['Fecha_Pub']
+        form.categoria.data = libro['Categoria']
+        form.cantidad.data = libro['Cantidad']
+        form.disponibilidad.data = libro['Disponibilidad']
+        form.editorial.data = libro['editorial']
+    
+    return render_template('editar_libro.html', form=form, libro_id=libro_id)
+
+@app.route('/procesar_renta/<int:libro_id>', methods=['POST'])
+def procesar_renta(libro_id):
+    fecha_renta = datetime.today().date()
+    fecha_dev = fecha_renta + timedelta(days=30)
+   
+    cursor = db.cursor()
+    
+    insert_query = """
+    INSERT INTO rentas (ID_Libro, ID_US, Fecha_Renta, Fecha_Dev, Devuelto)
+    VALUES (%s, %s, %s, %s, 0)
+    """
+    cursor.execute(insert_query, (libro_id, session['user_id'], fecha_renta, fecha_dev,))
+    
+    update_query = """
+    UPDATE libros
+    SET Disponibilidad = Disponibilidad - 1
+    WHERE ID = %s AND Disponibilidad > 0
+    """
+    cursor.execute(update_query, (libro_id,))
+    
+    db.commit()
+    cursor.close()
+
+    flash('Renta de libro exitosa. Fecha de devolución: %s' % fecha_dev, 'success')
+
+    return redirect(url_for('index'))
+
+
+
+@app.route('/Mis_Rentas', methods=['GET'])
+def Mis_Rentas():
+    query = """
+    SELECT l.Nombre, r.ID_US, r.Fecha_Renta, r.Fecha_Dev, r.ID, l.ID
+    FROM rentas r
+    JOIN libros l ON r.ID_Libro = l.ID
+    WHERE r.Devuelto = 0 AND r.ID_US = %s
+    """
+    cursor = db.cursor()
+    cursor.execute(query, (session['user_id'],))
+
+    rentas = cursor.fetchall()
+    cursor.close()
+
+    return render_template('rentas.html', rentas=rentas)
+
+@app.route('/devolver_libro/<int:renta_id>/<int:libro_id>', methods=['POST'])
+def devolver_libro(renta_id, libro_id):
+    cursor = db.cursor()
+
+    update_renta_query = """
+    UPDATE rentas
+    SET Devuelto = 1
+    WHERE ID = %s
+    """
+    cursor.execute(update_renta_query, (renta_id,))
+
+    update_libro_query = """
+    UPDATE libros
+    SET Disponibilidad = Disponibilidad + 1
+    WHERE ID = %s
+    """
+    cursor.execute(update_libro_query, (libro_id,))
+
+    db.commit()
+    cursor.close()
+
+    flash('Libro devuelto exitosamente', 'success')
+    return redirect(url_for('Mis_Rentas'))
+
+
 
 if __name__=='__main__':
     app.run(debug=True)

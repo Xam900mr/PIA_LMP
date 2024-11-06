@@ -61,7 +61,7 @@
 <body>
  
 <div class="container">
-<h1>Add a New Book</h1>
+<h1>Agregar Libro</h1>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
 <div class="alert">{{ messages[0] }}</div>
@@ -110,5 +110,7 @@
 </form>
 </div>
  
+<a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
+
 </body>
 </html>

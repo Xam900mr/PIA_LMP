@@ -13,7 +13,7 @@
             position: fixed;             
             top: 20px;             
             right: 20px;      
-            transform: translate(-280%, -10%);       
+            transform: translate(-100%, -10%);       
             background-color: #4CAF50; 
             color: white;            
             padding: 15px;             
@@ -53,7 +53,7 @@
         }
 
         .boton2 {
-            width: 150px;
+            width: 160px;
             background-color: rgb(89, 199, 89);
             color: black;        
             padding: 10px 20px;
@@ -71,7 +71,7 @@
  
         }
         .boton3 {
-            width: 170px;
+            width: 160px;
             background-color: #f44336;
             color: black;        
             padding: 10px 20px;
@@ -108,7 +108,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             padding: 20px;
-            width: 300px;
+            width: 320px;
             transition: transform 0.2s;
         }
  
@@ -142,13 +142,13 @@
         </div>
         {% else %}
             <div>
-                Bienvenido {{user_id}}
+                Bienvenido {{ session['user_name'] }}
             </div>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 {% if user_type == 'e' %}
                     <button onclick="window.location.href='/agregar'" class="boton1">Agregar Libro</button>
                 {% else %}
-                    <button onclick="window.location.href='/add_book'" class="boton1">Mis Rentas</button>
+                    <button onclick="window.location.href='/Mis_Rentas'" class="boton1">Mis Rentas</button>
                 {% endif %}
                 <button onclick="window.location.href='/logout'" class="boton1">Cerrar sesión</button>
             </div>
@@ -171,10 +171,38 @@
             {% if 'user_id' in session %}
                 <div style="display: flex; gap: 10px; margin-top: 10px;">
                     {% if user_type == 'e' %}
-                        <button onclick="window.location.href='/logout'" class="boton2">Editar Libro</button>
-                        <button onclick="window.location.href='/logout'" class="boton3">Eliminar Libro</button>
+                        <button onclick="window.location.href='/editar_libro/{{ libro[0] }}'" class="boton2">Editar Libro</button>
+                        <form id="deleteForm{{ libro[0] }}" action="/eliminar_libro/{{ libro[0] }}" method="POST" style="display:inline;">
+                            <button type="button" onclick="confirmDelete('{{ libro[0] }}')" class="boton3">Eliminar Libro</button>
+                        </form>
+                        
+                        <script>
+                        function confirmDelete(libroId) {
+                            if (confirm('¿Estás seguro de que deseas eliminar este libro?')) {
+                                document.getElementById('deleteForm' + libroId).submit();
+                            }
+                        }
+                        </script>
+                    {% else %}
+                        {%  if libro[8] != 0 %}
+                            <form id="rentaForm{{ libro[0] }}" action="/procesar_renta/{{ libro[0] }}" method="POST" style="display:inline;">
+                                <button type="button" onclick="confirmRenta('{{ libro[0] }}')" class="boton2">Rentar Libro</button>
+                            </form>
+                            
+                            <script>
+                            function confirmRenta(libroId) {
+                                if (confirm('¿Estás seguro de que deseas rentar este libro?')) {
+                                    document.getElementById('rentaForm'+ libroId).submit();
+                                }
+                            }
+                            </script>
+                        {% else %}
+                            <p>Fuera de disponibilidad</p>
+                        {% endif%}
+
                     {% endif %}
                 </div>
+                
             {% endif %}
         </div>
         {% endfor %}
