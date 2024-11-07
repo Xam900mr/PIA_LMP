@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Rentas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .no-rentas {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+        }
+        .back-button {
+            display: block;
+            width: 250px;
+            padding: 10px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mis Rentas Activas</h1>
+    
+    {% if rentas %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Libro</th>
+                    <th>Fecha de Renta</th>
+                    <th>Fecha de Devolución</th>
+                    <th>Devolver</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for renta in rentas %}
+                    <tr>
+                        <td>{{ renta[0] }}</td>
+                        <td>{{ renta[2] }}</td>
+                        <td>{{ renta[3] }}</td>
+                        <td>
+                            <form action="/devolver_libro/{{ renta[4] }}/{{ renta[5] }}" method="POST" style="display:inline;">
+                                <button type="submit" class="boton2">Devolver Libro</button>
+                            </form>
+                         </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="no-rentas">No tienes rentas activas en este momento.</p>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
+</body>
+</html>

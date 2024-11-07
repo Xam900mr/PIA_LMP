@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Libros</title>
+    <style>
+        .popup {             
+            display: none; 
+            position: fixed;             
+            top: 20px;             
+            left: 50%;       
+            transform: translateX(-50%);   
+            background-color: #4CAF50; 
+            color: white;            
+            padding: 15px;             
+            border-radius: 5px;            
+            z-index: 1000; 
+            transition: opacity 0.5s ease;
+        }
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #015958;
+            color: white;
+        }
+        .Subtitulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            padding: 20px;
+            background-color: #01716f;
+            color: white;
+        }
+        .Subtitulo h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+        .Subtitulo h2 {
+            font-size: 18px;
+            color: aliceblue;
+            margin: 0;
+        }
+        .boton1 {
+            width: 150px;
+            background-color: #D8FFDB;
+            color: black;        
+            padding: 10px 20px;
+            border: 2px solid #C7FFED;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .boton1:hover {
+            background-color: #C7FFED;
+            color: black;
+            float: right;
+ 
+        }
+
+        .boton2 {
+            width: 160px;
+            background-color: rgb(89, 199, 89);
+            color: black;        
+            padding: 10px 20px;
+            border: 2px solid #C7FFED;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .boton2:hover {
+            background-color: #C7FFED;
+            color: black;
+            float: right;
+ 
+        }
+        .boton3 {
+            width: 160px;
+            background-color: #f44336;
+            color: black;        
+            padding: 10px 20px;
+            border: 2px solid #C7FFED;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .boton3:hover {
+            background-color: #C7FFED;
+            color: black;
+            float: right;
+ 
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+ 
+        .book-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+ 
+        .book-card {
+            background-color: #D8FFDB;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 320px;
+            transition: transform 0.2s;
+        }
+ 
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+ 
+   
+        .book-card h2 {
+            color: #015958;
+            font-size: 20px;
+            margin-top: 0;
+        }
+ 
+ 
+        .book-card p {
+            color: #008F8C;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .book-card h4{
+          float: left;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Libreria Mandela</h1>
+    </header>
+    <div class="Subtitulo">
+        <h1>Nuestra Libreria </h1>
+        
+        {% if 'user_id' not in session %}
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+            <button onclick="window.location.href='/login'" class="boton1">Ingresar</button>
+            <button onclick="window.location.href='/register'" class="boton1">Registrate</button>
+        </div>
+        {% else %}
+            <h2>
+                Bienvenido: {{ session['user_name'] }}
+            </h2>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                {% if user_type == 'e' %}
+                    <button onclick="window.location.href='/agregar'" class="boton1">Agregar Libro</button>
+                {% else %}
+                    <button onclick="window.location.href='/Mis_Rentas'" class="boton1">Mis Rentas</button>
+                {% endif %}
+                <button onclick="window.location.href='/logout'" class="boton1">Cerrar sesión</button>
+        </div>
+        {% endif %}
+        </div> 
+    <div class="book-container">
+        {% for libro in Libros %}
+        <div class="book-card">
+            <h2>{{ libro[1] }}</h2>
+            <p><strong>Autor:</strong> {{ libro[2] }}</p>
+            <p><strong>ISBN:</strong> {{ libro[3] }}</p>
+            <p><strong>Edición:</strong> {{ libro[4] }}</p>
+            <p><strong>Fecha de Publicación:</strong> {{ libro[5] }}</p>
+            <p><strong>Categoría:</strong> {{ libro[6] }}</p>
+            <p><strong>Cantidad:</strong> {{ libro[7] }}</p>
+            <p><strong>Disponibilidad:</strong> {{ libro[8] }}</p>
+            <p><strong>Editorial:</strong> {{ libro[9] }}</p>
+            {% if 'user_id' in session %}
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    {% if user_type == 'e' %}
+                        <button onclick="window.location.href='/editar_libro/{{ libro[0] }}'" class="boton2">Editar Libro</button>
+                        <form id="deleteForm{{ libro[0] }}" action="/eliminar_libro/{{ libro[0] }}" method="POST" style="display:inline;">
+                            <button type="button" onclick="confirmDelete('{{ libro[0] }}')" class="boton3">Eliminar Libro</button>
+                        </form>
+                        
+                        <script>
+                        function confirmDelete(libroId) {
+                            if (confirm('¿Estás seguro de que deseas eliminar este libro?')) {
+                                document.getElementById('deleteForm' + libroId).submit();
+                            }
+                        }
+                        </script>
+                    {% else %}
+                        {%  if libro[8] != 0 %}
+                            <form id="rentaForm{{ libro[0] }}" action="/procesar_renta/{{ libro[0] }}" method="POST" style="display:inline;">
+                                <button type="button" onclick="confirmRenta('{{ libro[0] }}')" class="boton2">Rentar Libro</button>
+                            </form>
+                            
+                            <script>
+                            function confirmRenta(libroId) {
+                                if (confirm('¿Estás seguro de que deseas rentar este libro?')) {
+                                    document.getElementById('rentaForm'+ libroId).submit();
+                                }
+                            }
+                            </script>
+                        {% else %}
+                            <h4><strong>FUERA DE DISPONIBILIDAD</strong></h4>
+                        {% endif%}
+
+                    {% endif %}
+                </div>
+                
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div> 
+    
+    <div class="container">   
+        {% with messages = get_flashed_messages() %}        
+        {% if messages %}           
+            <div id="flash-message" class="popup">{{ messages[0] }}</div>       
+        {% endif %}    
+        {% endwith %} 
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {         
+            var flashMessage = document.getElementById('flash-message');         
+            if (flashMessage) {            
+                flashMessage.style.display = 'block';             
+                setTimeout(function() {                
+                    flashMessage.style.opacity = '0';                 
+                    setTimeout(function() {                     
+                        flashMessage.style.display = 'none'; 
+                    }, 500); 
+                }, 2000); 
+            } 
+        }); 
+    </script>
+</body>
+</html>

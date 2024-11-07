@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Libro</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            width: 100%;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        form:hover {
+            transform: translateY(-5px);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+            font-size: 0.9rem;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: #ff7b54;
+            box-shadow: 0 0 8px rgba(255, 123, 84, 0.3);
+            outline: none;
+        }
+
+        button {
+            background-color: #ff7b54;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #ff5a33;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style-type: none;
+            color: #d9534f;
+            font-size: 0.9rem;
+        }
+        .back-button {
+            display: block;
+            width: 250px;
+            padding: 10px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #ff7b54;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #ff5a33;
+        }
+    </style>
+</head>
+<body>
+    <form method="post" action="{{ url_for('editar_libro', libro_id=libro_id) }}">
+        <h1>Editar Libro</h1>
+        <div>
+            <label for="Nombre">Nombre</label>
+            {{ form.Nombre }}<br>
+        </div>
+        
+        <div>
+            <label for="Autor">Autor</label>
+            {{ form.Autor }}<br>
+        </div>
+        
+        <div>
+            <label for="ISBN">ISBN</label>
+            {{ form.isbn }}<br>
+        </div>
+        
+        <div>
+            <label for="Edicion">Edición</label>
+            {{ form.edicion }}<br>
+        </div>
+        
+        <div>
+            <label for="Fecha de Publicación">Fecha de Publicación</label>
+            {{ form.fecha_pub }}<br>
+        </div>
+        
+        <div>
+            <label for="Categoria">Categoría</label>
+            {{ form.categoria }}<br>
+        </div>
+        
+        <div>
+            <label for="Cantidad">Cantidad</label>
+            {{ form.cantidad }}<br>
+        </div>
+        
+        <div>
+            <label for="Disponibilidad">Disponibilidad</label>
+            {{ form.disponibilidad }}<br>
+        </div>
+        
+        <div>
+            <label for="Editorial">Editorial</label>
+            {{ form.editorial }}<br>
+        </div>
+        
+        <button type="submit">Guardar Cambios</button>
+        <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
+    </form>
+</body>
+</html>
