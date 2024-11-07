@@ -12,8 +12,8 @@
             display: none; 
             position: fixed;             
             top: 20px;             
-            right: 20px;      
-            transform: translate(-100%, -10%);       
+            left: 50%;       
+            transform: translateX(-50%);   
             background-color: #4CAF50; 
             color: white;            
             padding: 15px;             
@@ -23,14 +23,28 @@
         }
         header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 20px;
             background-color: #015958;
             color: white;
         }
-        header h1 {
-            font-size: 24px;
+        .Subtitulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            padding: 20px;
+            background-color: #01716f;
+            color: white;
+        }
+        .Subtitulo h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+        .Subtitulo h2 {
+            font-size: 18px;
+            color: aliceblue;
             margin: 0;
         }
         .boton1 {
@@ -129,11 +143,18 @@
             font-size: 14px;
             margin: 5px 0;
         }
+        .book-card h4{
+          float: left;
+            color: red;
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Libros Disponibles</h1>
+        <h1>Libreria Mandela</h1>
+    </header>
+    <div class="Subtitulo">
+        <h1>Nuestra Libreria </h1>
         
         {% if 'user_id' not in session %}
         <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -141,9 +162,9 @@
             <button onclick="window.location.href='/register'" class="boton1">Registrate</button>
         </div>
         {% else %}
-            <div>
-                Bienvenido {{ session['user_name'] }}
-            </div>
+            <h2>
+                Bienvenido: {{ session['user_name'] }}
+            </h2>
             <div style="display: flex; gap: 10px; margin-top: 10px;">
                 {% if user_type == 'e' %}
                     <button onclick="window.location.href='/agregar'" class="boton1">Agregar Libro</button>
@@ -151,11 +172,9 @@
                     <button onclick="window.location.href='/Mis_Rentas'" class="boton1">Mis Rentas</button>
                 {% endif %}
                 <button onclick="window.location.href='/logout'" class="boton1">Cerrar sesión</button>
-            </div>
+        </div>
         {% endif %}
-
-
-    </header>  
+        </div> 
     <div class="book-container">
         {% for libro in Libros %}
         <div class="book-card">
@@ -197,7 +216,7 @@
                             }
                             </script>
                         {% else %}
-                            <p>Fuera de disponibilidad</p>
+                            <h4><strong>FUERA DE DISPONIBILIDAD</strong></h4>
                         {% endif%}
 
                     {% endif %}

@@ -93,11 +93,25 @@
             color: #d9534f;
             font-size: 0.9rem;
         }
+        .back-button {
+            display: block;
+            width: 250px;
+            padding: 10px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #ff7b54;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #ff5a33;
+        }
     </style>
 </head>
 <body>
-    <h1>Editar Libro</h1>
     <form method="post" action="{{ url_for('editar_libro', libro_id=libro_id) }}">
+        <h1>Editar Libro</h1>
         <div>
             <label for="Nombre">Nombre</label>
             {{ form.Nombre }}<br>
@@ -144,6 +158,7 @@
         </div>
         
         <button type="submit">Guardar Cambios</button>
+        <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
     </form>
 </body>
 </html>

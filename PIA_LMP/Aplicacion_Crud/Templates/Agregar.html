@@ -56,6 +56,21 @@
             margin-bottom: 20px;
             border-radius: 4px;
         }
+
+        .back-button {
+            display: block;
+            width: 250px;
+            padding: 10px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #5cb85c;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #5cb85c;
+        }
 </style>
 </head>
 <body>
@@ -106,11 +121,13 @@
             {{ form.editorial(class="form-control") }}
 </div>
  
-        <button type="submit" class="btn">Add Book</button>
+        <button type="submit" class="btn">Agregar Libro</button>
+
 </form>
+    <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
 </div>
  
-<a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
+
 
 </body>
 </html>

@@ -65,12 +65,27 @@
             list-style-type: none;
             color: red;
         }
+        .back-button {
+            display: block;
+            width: 250px;
+            padding: 10px;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
-    <h1>Registro de Usuario</h1>
  
     <form method="post" action="{{ url_for('register') }}">
+        <h1>Registro de Usuario</h1>
         <div>
             <label for="Usuario">Nombre:</label>
             {{ form.Usuario(size=32) }}
@@ -120,9 +135,10 @@
         </div>
     
         <button type="submit">Registrarse</button>
+        <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
     </form>
 
-    <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
+    
     
 </body>
 </html>

@@ -5,81 +5,116 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-         .popup {             
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 2em;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 1.5em;
+            color: #333333;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555555;
+            margin-bottom: 0.5em;
+            display: inline-block;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75em;
+            margin-bottom: 1em;
+            border: 1px solid #cccccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .error-list {
+            color: #ff4c4c;
+            font-size: 0.875em;
+            margin-bottom: 1em;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1em;
+        }
+
+        .remember label {
+            margin-left: 0.5em;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75em;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        .popup {             
             display: none; 
             position: fixed;             
             top: 20px;             
-            right: 20px;      
-            transform: translate(-190%, -10%);       
-            background-color: red; 
+            left: 50%;       
+            transform: translateX(-50%);   
+            background-color: #4CAF50; 
             color: white;            
             padding: 15px;             
             border-radius: 5px;            
             z-index: 1000; 
             transition: opacity 0.5s ease;
         }
-        .popup-close {
-            cursor: pointer;
-            color: red;
-            float: right;
-            font-weight: bold;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
-        }
-        form {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 300px;
-            box-sizing: border-box;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-        label {
+        .back-button {
             display: block;
-            margin: 8px 0 4px;
-            color: #333;
-        }
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 8px;
-            margin: 4px 0 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        button {
-            width: 100%;
+            width: 250px;
             padding: 10px;
-            background-color: #007bff;
+            margin: 20px auto;
+            text-align: center;
+            background-color: #007BFF;
             color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            text-decoration: none;
+            border-radius: 5px;
         }
-        button:hover {
+        .back-button:hover {
             background-color: #0056b3;
-        }
-        .error-list {
-            color: red;
-            font-size: 0.9em;
-            margin-top: -8px;
-            margin-bottom: 8px;
-        }
-        .remember {
-            display: flex;
-            align-items: center;
-            margin: 12px 0;
         }
     </style>
 </head>
@@ -109,14 +144,9 @@
                     {% endfor %}
                 </ul>
             {% endif %}
-        </div>
-        
-        <div class="remember">
-            {{ form.remember() }}
-            <label for="remember">Recordarme</label>
-        </div>
-        
+        </div>        
         <button type="submit">Iniciar Sesión</button>
+        <a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
     </form>
 
     <div class="container"> 
@@ -141,9 +171,6 @@
             } 
         }); 
     </script>
-
-
-<a href="{{ url_for('index') }}" class="back-button">Volver a la página principal</a>
 
 </body>
 </html>

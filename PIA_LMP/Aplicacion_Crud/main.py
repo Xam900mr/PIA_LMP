@@ -21,7 +21,6 @@ class FormUsuarios(Form):
 class LoginForm(Form):
     Correo = StringField('Correo', [validators.DataRequired(), validators.Email()])
     Contrasena = PasswordField('Contraseña', [validators.DataRequired()])
-    remember = BooleanField('Recordarme')
 
 class BookForm(Form):     
     Nombre = StringField('Nombre', [validators.DataRequired()])     
@@ -116,15 +115,28 @@ def logout():
 
 @app.route('/eliminar_libro/<int:libro_id>', methods=['POST'])
 def eliminar_libro(libro_id):
-   
-    query = "DELETE FROM libros WHERE ID = %s"
-
     cursor = db.cursor()
-    cursor.execute(query, (libro_id,))
-    db.commit()
-    cursor.close()
     
-    flash('Libro eliminado exitosamente', 'success')
+    query_rentado = "SELECT Devuelto FROM rentas WHERE ID_Libro = %s AND Devuelto = 0"
+    cursor.execute(query_rentado, (libro_id,))
+    rentas_pendientes = cursor.fetchone() 
+
+    if rentas_pendientes:
+        flash('No se puede eliminar el libro porque aún hay rentas pendientes', 'error')
+        cursor.close()
+        return redirect(url_for('index'))
+    else:
+        rentas_query ="DELETE from rentas WHERE ID_Libro = %s"
+    
+        query = "DELETE FROM libros WHERE ID = %s"
+
+        
+        cursor.execute(rentas_query, (libro_id,))
+        cursor.execute(query, (libro_id,))
+        db.commit()
+        cursor.close()
+        
+        flash('Libro eliminado exitosamente', 'success')
 
     return redirect(url_for('index'))
 
