@@ -1,34 +1,33 @@
 pipeline {
     agent any
- 
+
     environment {
         VIRTUAL_ENV = "PIA_LMP"
         DOCKER_IMAGE = "sawnfozter/flask-app"
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
     }
- 
+
     stages {
         stage('Checkout Code') {
             steps {
-                git 'PIA_LMP/requirements.txt at main · Xam900mr/PIA_LMP'
+                git credentialsId: 'github-credentials', url: 'https://github.com/Xam900mr/PIA_LMP.git', branch: 'main'
             }
         }
 
-        stage('Set up Virtual Environment') {             
+        stage('Set up Virtual Environment') {
             steps {
-                        
-                sh 'python -m venv $VIRTUAL_ENV' 
-                sh '$VIRTUAL_ENV/bin/pip install --upgrade pip'  
-                sh '$VIRTUAL_ENV/bin/pip install -r requirements.txt'  
-            }         
-        }         
-
-        stage('Run Unit Tests') {             
-            steps {                 
-                sh '$VIRTUAL_ENV/bin/python -m unittest discover tests/ -s tests -p "test.py"'  
-            }         
+                bat 'python -m venv %VIRTUAL_ENV%' 
+                bat '%VIRTUAL_ENV%\\Scripts\\pip install --upgrade pip'
+                bat '%VIRTUAL_ENV%\\Scripts\\pip install -r requirements.txt'
+            }
         }
- 
+
+        stage('Run Unit Tests') {
+            steps {
+                bat '%VIRTUAL_ENV%\\Scripts\\python -m unittest discover -s tests -p "test.py"'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -36,7 +35,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Push Docker Image to Registry') {
             steps {
                 script {
@@ -46,26 +45,25 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Deploy Application') {
             steps {
                 script {
-                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} up -d'
+                    bat 'docker-compose -f %DOCKER_COMPOSE_FILE% up -d'
                 }
             }
         }
     }
- 
+
     post {
         always {
-            echo 'Cleaning up and finishing the pipeline.'         
-            }         
-            success {             
-                echo 'Pipeline completed successfully!'         
-            }         
-            failure {             
-                echo 'Pipeline failed. Check logs for more details.'         
-            }
+            echo 'Cleaning up and finishing the pipeline.'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed. Check logs for more details.'
         }
     }
 }
