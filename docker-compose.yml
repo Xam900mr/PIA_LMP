@@ -8,7 +8,7 @@ services:
     ports:
       - "5000:5000"       
     environment:
-      MYSQL_HOST: host.docker.internal  # Apunta a la base de datos en el host
+      MYSQL_HOST: host.docker.internal 
       MYSQL_USER: root    
       MYSQL_PASSWORD: ramm160799  
       MYSQL_DATABASE: adtareas
