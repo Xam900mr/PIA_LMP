@@ -16,15 +16,15 @@ pipeline {
 
         stage('Set up Virtual Environment') {             
             steps {
-                sh 'python -m venv $VIRTUAL_ENV'
-                sh '$VIRTUAL_ENV/bin/pip install --upgrade pip'
-                sh '$VIRTUAL_ENV/bin/pip install -r requirements.txt'
+                bat 'python -m venv %VIRTUAL_ENV%'
+                bat '%VIRTUAL_ENV%\\Scripts\\pip install --upgrade pip'
+                bat '%VIRTUAL_ENV%\\Scripts\\pip install -r requirements.txt'
             }         
         }
 
-        stage('Run Unit Tests') {             
+        stage('Run Unit Tests') {  
             steps {
-                sh '$VIRTUAL_ENV/bin/python -m unittest discover tests/ -s tests -p "test.py"'
+                bat '%VIRTUAL_ENV%\\Scripts\\python -m unittest discover tests/ -s tests -p "test.py"'
             }         
         }
 
@@ -49,13 +49,12 @@ pipeline {
         stage('Deploy Application') {
             steps {
                 script {
-                    sh 'docker-compose -f ${DOCKER_COMPOSE_FILE} up -d'
+                    bat 'docker-compose -f %DOCKER_COMPOSE_FILE% up -d'
                 }
             }
         }
     }
-
-    post {
+ post {
         always {
             echo 'Cleaning up and finishing the pipeline.'
         }         
@@ -64,6 +63,6 @@ pipeline {
         }         
         failure {
             echo 'Pipeline failed. Check logs for more details.'
-        }
-    }
+        }
+    }
 }
