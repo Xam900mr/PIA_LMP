@@ -19,4 +19,4 @@ services:
       MYSQL_USER: root             
       MYSQL_PASSWORD: ramm160799    
     ports:
-      - "3306:3306"               
+      - "3307:3306"               
