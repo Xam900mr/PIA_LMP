@@ -10,13 +10,12 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'PIA_LMP/requirements.txt at main · Xam900mr/PIA_LMP'
+                git 'https://github.com/Xam900mr/PIA_LMP.git'
             }
         }
 
         stage('Set up Virtual Environment') {             
-            steps {
-                        
+            steps {                      
                 sh 'python -m venv $VIRTUAL_ENV' 
                 sh '$VIRTUAL_ENV/bin/pip install --upgrade pip'  
                 sh '$VIRTUAL_ENV/bin/pip install -r requirements.txt'  
@@ -68,3 +67,4 @@ pipeline {
             }
         }
     }
+}
