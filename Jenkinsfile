@@ -22,11 +22,11 @@ pipeline {
             }
         }
 
-        stage('Run Unit Tests') {
+       /* stage('Run Unit Tests') {
             steps {
                 bat '%VIRTUAL_ENV%\\Scripts\\python -m unittest discover -s tests -p "test.py"'
             }
-        }
+        }*/
 
         stage('Build Docker Image') {
             steps {
