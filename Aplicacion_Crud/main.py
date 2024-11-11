@@ -54,12 +54,19 @@ app.secret_key = os.urandom(24)
 def index():
 
     try:
-        cursor = db.cursor()
-        cursor.execute("select * from libros")
-        Libros = cursor.fetchall()
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
+        with db.cursor() as cursor:
+            cursor.execute("SELECT * FROM libros")
+            Libros = cursor.fetchall()
 
+    except mysql.connector.Error as err:
+        Libros=[]
+        print(f"Error: {err}")
+        return "Error al obtener los datos de la base de datos", 500
+
+    cursor = db.cursor()
+    cursor.execute("select * from libros")
+    Libros = cursor.fetchall()
+    
     user_type = session.get('user_type')
 
     return render_template('index.html', Libros=Libros, session=session, user_type=user_type)
