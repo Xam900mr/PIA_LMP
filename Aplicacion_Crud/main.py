@@ -60,10 +60,6 @@ def index():
 
     except mysql.connector.Error as err:
         Libros=[]
-
-    cursor = db.cursor()
-    cursor.execute("select * from libros")
-    Libros = cursor.fetchall()
     
     user_type = session.get('user_type')
 
