@@ -11,7 +11,8 @@ services:
       MYSQL_HOST: db      
       MYSQL_USER: root    
       MYSQL_PASSWORD: ramm160799  
-      MYSQL_DATABASE: adtareas    
+      MYSQL_DATABASE: adtareas   
+    network_mode: "host"
     depends_on:
       - db
     volumes:
