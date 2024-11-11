@@ -7,12 +7,6 @@ from mysql.connector import Error
 from wtforms import Form, StringField, PasswordField, validators, DateField, IntegerField
 from datetime import datetime, timedelta
 
-"""db = mysql.connector.connect(
-    user="root",
-    password="ramm160799",
-    host="db",
-    database="adtareas"
-)"""
 def connect_to_db():
     while True:
         try:
@@ -276,4 +270,5 @@ def devolver_libro(renta_id, libro_id):
 
 
 if __name__=='__main__':
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
+    """app.run(debug=True)"""
