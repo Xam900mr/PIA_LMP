@@ -6,7 +6,7 @@ from wtforms import Form, StringField, PasswordField, validators, DateField, Int
 from datetime import datetime, timedelta
 
 db = mysql.connector.connect(
-    port="3307",
+    host="db",
     user="root",
     password="ramm160799",
     host="localhost",
