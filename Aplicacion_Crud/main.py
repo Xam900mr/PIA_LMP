@@ -13,10 +13,10 @@ def connect_to_db():
     while True:
         try:
             connection = mysql.connector.connect(
-                host=os.getenv('MYSQL_HOST', 'host.docker.internal'),
-                user=os.getenv('MYSQL_USER', 'root'), 
-                password=os.getenv('MYSQL_PASSWORD', 'ramm160799'),
-                database=os.getenv('MYSQL_DATABASE', 'adtareas')
+                host=os.getenv('MYSQL_HOST', ''),
+                user=os.getenv('MYSQL_USER', ''), 
+                password=os.getenv('MYSQL_PASSWORD', ''),
+                database=os.getenv('MYSQL_DATABASE', '')
             )
             if connection.is_connected():
                 print("Connected to MySQL")
