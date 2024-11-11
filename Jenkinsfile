@@ -7,13 +7,11 @@ pipeline {
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
     }
 
-    stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/Xam900mr/PIA_LMP.git'
+                git credentialsId: 'github-credentials', url: 'https://github.com/Xam900mr/PIA_LMP.git', branch: 'main'
             }
         }
-
         stage('Set up Virtual Environment') {             
             steps {
                 sh 'python -m venv $VIRTUAL_ENV'
