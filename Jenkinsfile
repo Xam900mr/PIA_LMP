@@ -1,12 +1,12 @@
 pipeline {
     agent any
- 
+
     environment {
         VIRTUAL_ENV = "PIA_LMP"
         DOCKER_IMAGE = "sawnfozter/flask-app"
         DOCKER_COMPOSE_FILE = "docker-compose.yml"
     }
- 
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -15,19 +15,19 @@ pipeline {
         }
 
         stage('Set up Virtual Environment') {             
-            steps {                      
-                sh 'python -m venv $VIRTUAL_ENV' 
-                sh '$VIRTUAL_ENV/bin/pip install --upgrade pip'  
-                sh '$VIRTUAL_ENV/bin/pip install -r requirements.txt'  
-            }         
-        }         
-
-        stage('Run Unit Tests') {             
-            steps {                 
-                sh '$VIRTUAL_ENV/bin/python -m unittest discover tests/ -s tests -p "test.py"'  
+            steps {
+                sh 'python -m venv $VIRTUAL_ENV'
+                sh '$VIRTUAL_ENV/bin/pip install --upgrade pip'
+                sh '$VIRTUAL_ENV/bin/pip install -r requirements.txt'
             }         
         }
- 
+
+        stage('Run Unit Tests') {             
+            steps {
+                sh '$VIRTUAL_ENV/bin/python -m unittest discover tests/ -s tests -p "test.py"'
+            }         
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -35,7 +35,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Push Docker Image to Registry') {
             steps {
                 script {
@@ -45,7 +45,7 @@ pipeline {
                 }
             }
         }
- 
+
         stage('Deploy Application') {
             steps {
                 script {
@@ -54,17 +54,16 @@ pipeline {
             }
         }
     }
- 
+
     post {
         always {
-            echo 'Cleaning up and finishing the pipeline.'         
-            }         
-            success {             
-                echo 'Pipeline completed successfully!'         
-            }         
-            failure {             
-                echo 'Pipeline failed. Check logs for more details.'         
-            }
+            echo 'Cleaning up and finishing the pipeline.'
+        }         
+        success {
+            echo 'Pipeline completed successfully!'
+        }         
+        failure {
+            echo 'Pipeline failed. Check logs for more details.'
         }
     }
 }
