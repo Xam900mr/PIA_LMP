@@ -2,10 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import os
-from wtforms import Form, BooleanField, StringField, PasswordField, validators, DateField, IntegerField
+from wtforms import Form, StringField, PasswordField, validators, DateField, IntegerField
 from datetime import datetime, timedelta
 
 db = mysql.connector.connect(
+    port="3307",
     user="root",
     password="ramm160799",
     host="localhost",
