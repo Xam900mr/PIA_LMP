@@ -16,7 +16,7 @@ pipeline {
 
         stage('Set up Virtual Environment') {
             steps {
-                bat 'python -m venv %VIRTUAL_ENV%'
+                bat 'python3 -m venv %VIRTUAL_ENV%' // O bien, usar la ruta completa de Python si es necesario
                 bat '%VIRTUAL_ENV%\\Scripts\\pip install --upgrade pip'
                 bat '%VIRTUAL_ENV%\\Scripts\\pip install -r requirements.txt'
             }
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
-                bat '%VIRTUAL_ENV%\\Scripts\\python -m unittest discover tests/ -s tests -p "test.py"'
+                bat '%VIRTUAL_ENV%\\Scripts\\python -m unittest discover -s tests -p "test.py"'
             }
         }
 
