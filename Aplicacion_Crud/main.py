@@ -47,17 +47,18 @@ class BookForm(Form):
     disponibilidad = IntegerField('Disponibilidad', [validators.DataRequired()]) 
     editorial = StringField('Editorial', [validators.DataRequired()]) 
 
-
-
 app = Flask (__name__, template_folder='./Templates')
 app.secret_key = os.urandom(24)
 
 @app.route('/', methods=['GET'])
 def index():
-    
-    cursor=db.cursor()
-    cursor.execute("select * from libros")
-    Libros = cursor.fetchall()
+
+    try:
+        cursor = db.cursor()
+        cursor.execute("select * from libros")
+        Libros = cursor.fetchall()
+    except mysql.connector.Error as err:
+        print(f"Error: {err}")
 
     user_type = session.get('user_type')
 
