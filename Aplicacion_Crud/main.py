@@ -7,14 +7,16 @@ from mysql.connector import Error
 from wtforms import Form, StringField, PasswordField, validators, DateField, IntegerField
 from datetime import datetime, timedelta
 
+
+
 def connect_to_db():
     while True:
         try:
             connection = mysql.connector.connect(
-                host="db",
-                user="root",
-                password="ramm160799",
-                database="adtareas"
+                host=os.getenv('MYSQL_HOST', 'localhost'),  # Host de la base de datos (puede ser 'host.docker.internal' si es necesario)
+                user=os.getenv('MYSQL_USER', 'root'), 
+                password=os.getenv('MYSQL_PASSWORD', 'ramm160799'),
+                database=os.getenv('MYSQL_DATABASE', 'adtareas')
             )
             if connection.is_connected():
                 print("Connected to MySQL")
