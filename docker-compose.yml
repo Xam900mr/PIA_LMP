@@ -9,14 +9,13 @@ services:
     volumes:
       - .:/Aplicacion_Crud                 
     depends_on:
-      - db                          
+      - db     
+    command: python /Aplicacion_Crud/main.py                      
  
   db:
     image: mysql:8.0          
     environment:
       MYSQL_ROOT_PASSWORD: ramm160799  
-      MYSQL_DATABASE: adtareas     
-      MYSQL_USER: root             
-      MYSQL_PASSWORD: ramm160799    
+      MYSQL_DATABASE: adtareas  
     ports:
       - "3307:3306"               
