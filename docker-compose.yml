@@ -11,10 +11,10 @@ services:
     depends_on:
       - db
     environment:
-      MYSQL_HOST: db           
+      MYSQL_HOST: host.docker.internal
       MYSQL_USER: root 
       MYSQL_PASSWORD: ramm160799
-      MYSQL_DATABASE: adtareas 
+      MYSQL_DATABASE: adtareas
 
   db:
     image: mysql:8.0

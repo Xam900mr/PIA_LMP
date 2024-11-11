@@ -1,8 +1,8 @@
 FROM python:3.12-slim
 
-WORKDIR /Aplicacion_Crud
+RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && apt-get install -y netcat
+WORKDIR /Aplicacion_Crud
  
 COPY requirements.txt . 
 RUN pip install --no-cache-dir -r requirements.txt
