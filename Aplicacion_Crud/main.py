@@ -60,8 +60,6 @@ def index():
 
     except mysql.connector.Error as err:
         Libros=[]
-        print(f"Error: {err}")
-        return "Error al obtener los datos de la base de datos", 500
 
     cursor = db.cursor()
     cursor.execute("select * from libros")
