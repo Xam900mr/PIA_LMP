@@ -2,15 +2,35 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.security import generate_password_hash, check_password_hash
 import mysql.connector
 import os
+import time
+from mysql.connector import Error
 from wtforms import Form, StringField, PasswordField, validators, DateField, IntegerField
 from datetime import datetime, timedelta
 
-db = mysql.connector.connect(
+"""db = mysql.connector.connect(
     user="root",
     password="ramm160799",
     host="db",
     database="adtareas"
-)
+)"""
+def connect_to_db():
+    while True:
+        try:
+            connection = mysql.connector.connect(
+                host="db",
+                user="root",
+                password="ramm160799",
+                database="adtareas"
+            )
+            if connection.is_connected():
+                print("Connected to MySQL")
+                return connection
+        except Error as e:
+            print(f"Error: {e}")
+            print("Retrying in 5 seconds...")
+            time.sleep(5)
+ 
+db = connect_to_db()
 
 class FormUsuarios(Form):
     Usuario = StringField('Username', [validators.Length(min=8, max=60)])
