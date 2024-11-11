@@ -14,18 +14,18 @@ pipeline {
             }
         }
 
-        stage('Set up Virtual Environment') {             
+        stage('Set up Virtual Environment') {
             steps {
                 bat 'python -m venv %VIRTUAL_ENV%'
                 bat '%VIRTUAL_ENV%\\Scripts\\pip install --upgrade pip'
                 bat '%VIRTUAL_ENV%\\Scripts\\pip install -r requirements.txt'
-            }         
+            }
         }
 
-        stage('Run Unit Tests') {  
+        stage('Run Unit Tests') {
             steps {
                 bat '%VIRTUAL_ENV%\\Scripts\\python -m unittest discover tests/ -s tests -p "test.py"'
-            }         
+            }
         }
 
         stage('Build Docker Image') {
@@ -54,15 +54,16 @@ pipeline {
             }
         }
     }
- post {
+
+    post {
         always {
             echo 'Cleaning up and finishing the pipeline.'
-        }         
+        }
         success {
             echo 'Pipeline completed successfully!'
-        }         
+        }
         failure {
             echo 'Pipeline failed. Check logs for more details.'
-        }
-    }
+        }
+    }
 }
