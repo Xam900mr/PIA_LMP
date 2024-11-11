@@ -16,11 +16,8 @@ pipeline {
 
         stage('Set up Virtual Environment') {
             steps {
-<<<<<<< HEAD
                 bat 'python -m venv %VIRTUAL_ENV%' 
-=======
                 bat 'python -m venv %VIRTUAL_ENV%' 
->>>>>>> a836cb1883372d7a3c3c85b0d61db8bf03f57294
                 bat '%VIRTUAL_ENV%\\Scripts\\pip install --upgrade pip'
                 bat '%VIRTUAL_ENV%\\Scripts\\pip install -r requirements.txt'
             }
