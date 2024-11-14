@@ -138,6 +138,7 @@ def eliminar_libro(libro_id):
     query_rentado = "SELECT Devuelto FROM rentas WHERE ID_Libro = %s AND Devuelto = 0"
     cursor.execute(query_rentado, (libro_id,))
     rentas_pendientes = cursor.fetchone() 
+    cursor.fetchall()
 
     if rentas_pendientes:
         flash('No se puede eliminar el libro porque aún hay rentas pendientes', 'error')
